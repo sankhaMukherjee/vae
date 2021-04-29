@@ -12,9 +12,9 @@ are easy to understand rather than whether they are efficient.
 The following examples are present
 
 
-|         command        | model | backend | data |
-|------------------------|-------|---------|------|
-|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST |
+|         command        | model | backend | data | comments |
+|------------------------|-------|---------|------|----------|
+|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST | Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
 
 
 
