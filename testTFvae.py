@@ -14,6 +14,7 @@ from utils import dataUtils as dU
 def main():
 
     now = dt.now().strftime('%Y-%m-%d--%H-%M-%S')
+    os.makedirs(f'results/{now}')
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
@@ -32,18 +33,20 @@ def main():
     vae = VAE.VAE(nInp, layers=layers, activations = activations, nLatent = nLatent)
 
     # --------- [ Train the model ] ---------------------
+    losses = []
     for epoch in range(EPOCHS):
         print('Start of epoch %d' % (epoch,), end='-> ')
 
         # Iterate over the batches of the dataset.
         for step, x in enumerate(train_dataset):
             reconLoss, klLoss, loss = vae.step( x )
+            losses.append([reconLoss, klLoss, loss])
 
             if step % 100 == 0:
                 print(reconLoss, klLoss, loss)
 
         if epoch % 2 == 0:
-            pU.plotMNISTImages(epoch, vae, x_test, y_test, now)
+            pU.plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=now)
 
 
     return
