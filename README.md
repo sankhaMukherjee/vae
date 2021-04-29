@@ -7,6 +7,18 @@ autoencoders. Some of the autoencoders are written in TensorFlow, and
 some in pyTorch. Care has been taken to make sure that the models
 are easy to understand rather than whether they are efficient. 
 
+# Examples
+
+The following examples are present
+
+
+|         command        | model | backend | data |
+|------------------------|-------|---------|------|
+|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/vae.py) | TensorFlow | MNIST |
+
+
+
+
 # Requirements
 
 The current version is written with the following configuration:
