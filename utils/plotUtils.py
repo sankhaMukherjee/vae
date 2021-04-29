@@ -38,8 +38,24 @@ def plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=None):
 
     return
 
+
+
+
 def plotLosses(losses, folder=None):
 
+    plt.figure()
+
+    for k, v in losses.items():
+        plt.plot( v, label=k )
+    plt.legend()
+    plt.yscale('log')
+
+    if folder is None:
+        outFile = f'results/losses.png'
+    else:
+        outFile = f'results/{folder}/losses.png'
+
+    plt.savefig(outFile)
 
 
     return

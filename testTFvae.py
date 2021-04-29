@@ -7,6 +7,7 @@ tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 
 from models.TF import VAE 
 from datetime import datetime as dt
+import numpy as np
 
 from utils import plotUtils as pU
 from utils import dataUtils as dU
@@ -48,6 +49,15 @@ def main():
         if epoch % 2 == 0:
             pU.plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=now)
 
+
+    # ------------- [plot losses] -----------------
+    losses = np.array(losses).T
+    losses = {
+        'reconstruction' : losses[0],
+        'KL Divergence' : losses[1],
+        'Total' : losses[2]
+    }
+    pU.plotLosses(losses, folder=now)
 
     return
 
