@@ -19,7 +19,7 @@ def main():
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 20
+    EPOCHS    = 2000
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
@@ -46,18 +46,17 @@ def main():
             if step % 100 == 0:
                 print(reconLoss, klLoss, loss)
 
-        if epoch % 2 == 0:
-            pU.plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=now)
-
-
-    # ------------- [plot losses] -----------------
+    # ------------- [plot everything] -----------------
     losses = np.array(losses).T
     losses = {
         'reconstruction' : losses[0],
-        'KL Divergence' : losses[1],
-        'Total' : losses[2]
-    }
+        'KL Divergence'  : losses[1],
+        'Total'          : losses[2]}
+
     pU.plotLosses(losses, folder=now)
+    pU.plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=now)
+    pU.plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=now)
+    pU.plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=21, logits=True, folder=now)
 
     return
 
