@@ -14,7 +14,7 @@ The following examples are present
 
 |         command        | model | backend | data |
 |------------------------|-------|---------|------|
-|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/vae.py) | TensorFlow | MNIST |
+|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST |
 
 
 
