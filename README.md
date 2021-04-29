@@ -16,9 +16,6 @@ The following examples are present
 |------------------------|-------|---------|------|----------|
 |`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST | Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
 
-
-
-
 # Requirements
 
 The current version is written with the following configuration:
@@ -54,3 +51,11 @@ import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 ```
+
+## Authors
+
+Sankha S. Mukherjee - Initial work (2021)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
