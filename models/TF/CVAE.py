@@ -29,8 +29,8 @@ class CVAE_Encoder(layers.Layer):
         for i, dl in enumerate(self.layers):
 
             if i == self.concatLayer:
-                x = tf.concat([x, condition], axis=1)
                 x = dl(x)
+                x = tf.concat([x, condition], axis=1)
             else:
                 x = dl(x)
         
