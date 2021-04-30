@@ -16,7 +16,8 @@ The following examples are present
 
 |         command        | model | backend | data | comments |
 |------------------------|-------|---------|------|----------|
-|`python3 testTFvae.py`  | [TF/vae.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST | Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
+|`python3 testTFvae.py`  | [TF/VAE.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST | Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
+|`python3 testTFcvae.py`  | [TF/CVAE.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/CVAE.py) | TensorFlow | MNIST | Conditional variational autoencoder. Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
 
 # Requirements
 
