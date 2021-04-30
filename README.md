@@ -5,7 +5,9 @@ Overview of different types of autoencoders.
 In this repository, we shall create a number of different types of
 autoencoders. Some of the autoencoders are written in TensorFlow, and
 some in pyTorch. Care has been taken to make sure that the models
-are easy to understand rather than whether they are efficient. 
+are easy to understand rather than whether they are efficient. Also most of this
+code does not follow good software engineering practices. This is not intended to
+be production quality code. This is expected to be experimental software.
 
 # Examples
 

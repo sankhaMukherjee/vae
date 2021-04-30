@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=None):
+def plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=None, condition=False):
     
     sel_ys = [ np.where(y_test == i)[0][0] for i in range(10) ]
     sel_xs = x_test[sel_ys, :]
@@ -13,7 +13,10 @@ def plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=None):
         y = i%2
         axes.append(plt.axes([x, y*0.5, 0.1, 0.5]))
 
-    x_hat = vae( sel_xs ).numpy()
+    if condition:
+        x_hat = vae( sel_xs, np.arange(10).reshape(-1, 1) ).numpy()
+    else:
+        x_hat = vae( sel_xs ).numpy()
 
     if logits:
         # convert to a sigmoid ...
@@ -53,11 +56,15 @@ def plotLosses(losses, folder=None):
 
     return
 
-def plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=None):
+def plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=None, condition=False):
 
-    _, _, z = vae.encoder( x_test )
-    z = z.numpy()
+    if condition:
+        _, _, z = vae.encoder( x_test, y_test.reshape(-1, 1).astype(  np.float32 ) )
+    else:
+        _, _, z = vae.encoder( x_test )
     
+    z = z.numpy()
+        
     sel_ys = [ np.where(y_test == i)[0] for i in range(10) ]
     colors = [ plt.cm.viridis(i)  for i in np.linspace(0.1, 0.9, 10)]
 
@@ -76,7 +83,7 @@ def plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=None):
     
     return 
 
-def plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=10, logits=True, folder=None):
+def plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=10, logits=True, folder=None, condition=False, number=1):
 
     
     plt.figure(figsize=(5,5), facecolor='black')
@@ -87,7 +94,12 @@ def plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=10, logits=
             zVals.append([x, y])
 
     zVals = np.array(zVals)
-    xHats = vae.decoder( zVals ).numpy()
+
+    if condition:
+        xHats = vae.decoder( zVals, np.ones( (zVals.shape[0],1) )*number ).numpy()
+    else:
+        xHats = vae.decoder( zVals ).numpy()
+    
     if logits:
         # convert to a sigmoid ...
         xHats = xHats.clip(-1e-2, 1e2)
@@ -109,6 +121,9 @@ def plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=10, logits=
         outFile = f'results/{epoch:05d}_LatentReconstruction.png'
     else:
         outFile = f'results/{folder}/{epoch:05d}_LatentReconstruction.png'
+
+    if condition:
+        outFile = outFile.replace( '.png', f'_{number:02d}.png' )
 
     plt.savefig(outFile)
     

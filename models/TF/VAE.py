@@ -18,7 +18,6 @@ class Encoder(layers.Layer):
 
     def call(self, inputs):
 
-        
         # Go through the Dense layers
         x = inputs * 1
         for dl in self.layers:

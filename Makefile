@@ -1,0 +1,6 @@
+
+
+clean:
+	bin/clean.sh  
+
+	
