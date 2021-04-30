@@ -19,7 +19,7 @@ def main():
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 20
+    EPOCHS    = 500
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
