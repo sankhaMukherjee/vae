@@ -18,6 +18,7 @@ The following examples are present
 |------------------------|-------|---------|------|----------|
 |`python3 testTFvae.py`  | [TF/VAE.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/VAE.py) | TensorFlow | MNIST | Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
 |`python3 testTFcvae.py`  | [TF/CVAE.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/CVAE.py) | TensorFlow | MNIST | Conditional variational autoencoder. Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. |
+|`python3 testTFcoercevae.py`  | [TF/coerceVAE.py](https://github.com/sankhaMukherjee/vae/blob/master/models/TF/coerceVAE.py) | TensorFlow | MNIST | coerced variational autoencoder. Both the encoder and the decoder are `Dense` layers. Reconstruction is simply based upon a `sigmoid_cross_entropy_with_logits`. MNIST digits are unraveled into a 784 dimensional vector. In this variation, there is some coersion while creating the latent space so that there is greater separation between members of the group that are known to be in different groups. |
 
 # Requirements
 
