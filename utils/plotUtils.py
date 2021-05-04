@@ -83,6 +83,42 @@ def plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=None, condition=Fals
     
     return 
 
+def plotMNISTLatentSpaceCoerce(epoch, vae, x_test, y_test, folder=None):
+
+    _, _, z, coerce = vae.encoder( x_test )
+    
+    z = z.numpy()
+    coerce = coerce.numpy().flatten()
+        
+    sel_ys = [ np.where(y_test == i)[0] for i in range(10) ]
+    colors = [ plt.cm.viridis(i)  for i in np.linspace(0.1, 0.9, 10)]
+
+    plt.figure()
+
+    ax1 = plt.axes([0.1, 0.1, 0.7, 0.7])
+
+    for i, sel_y in enumerate(sel_ys):
+        tempZ = z[ sel_y, : ]
+        plt.plot( tempZ[:, 0], tempZ[:, 1], 's', mec='None', mfc=colors[i], label=f'{i}', alpha=0.2 )
+    plt.legend()
+
+    if folder is None:
+        outFile = f'results/{epoch:05d}_LatentSpace.png'
+    else:
+        outFile = f'results/{folder}/{epoch:05d}_LatentSpace.png'
+
+    ax2 = plt.axes([0.1, 0.75, 0.89, 0.24])
+    for i, sel_y in enumerate(sel_ys):
+        tempCoerce = coerce[ sel_y ]
+        plt.hist( tempCoerce, bins=60, histtype='step', label=f'{i}' )
+    # plt.legend()
+
+
+    plt.savefig(outFile)
+
+    
+    return 
+
 def plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=10, logits=True, folder=None, condition=False, number=1):
 
     
