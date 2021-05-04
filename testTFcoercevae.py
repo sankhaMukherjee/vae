@@ -14,12 +14,12 @@ from utils import dataUtils as dU
 
 def main():
 
-    now = dt.now().strftime('%Y-%m-%d--%H-%M-%S')
+    now = dt.now().strftime('%Y-%m-%d--%H-%M-%S-coerce')
     os.makedirs(f'results/{now}')
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 5
+    EPOCHS    = 150
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
@@ -53,16 +53,15 @@ def main():
     losses = {
         'reconstruction' : losses[0],
         'KL Divergence'  : losses[1],
-        'Total'          : losses[2]}
+        'coerce Loss'    : losses[2],
+        'Total'          : losses[3],
+        }
 
-    # pU.plotLosses(losses, folder=now)
-    # pU.plotMNISTLatentSpace(epoch, cvae, x_test, y_test, folder=now, condition=True)
-    # pU.plotMNISTImages(epoch, cvae, x_test, y_test, logits=True, folder=now, condition=True)
-    # pU.plotMNISTLatentReconstruction(epoch, cvae, extent=(-2, 2), nSteps=21, logits=True, folder=now, condition=True, number=1)
-    # pU.plotMNISTLatentReconstruction(epoch, cvae, extent=(-2, 2), nSteps=21, logits=True, folder=now, condition=True, number=2)
-    # pU.plotMNISTLatentReconstruction(epoch, cvae, extent=(-2, 2), nSteps=21, logits=True, folder=now, condition=True, number=3)
-    # pU.plotMNISTLatentReconstruction(epoch, cvae, extent=(-2, 2), nSteps=21, logits=True, folder=now, condition=True, number=5)
-
+    pU.plotLosses(losses, folder=now)
+    pU.plotMNISTLatentSpaceCoerce(epoch, coerceVae, x_test, y_test, folder=now)
+    pU.plotMNISTImages(epoch, coerceVae, x_test, y_test, logits=True, folder=now, condition=False)
+    pU.plotMNISTLatentReconstruction(epoch, coerceVae, extent=(-2, 2), nSteps=21, logits=True, folder=now, condition=False)
+    
     return
 
 if __name__ == "__main__":

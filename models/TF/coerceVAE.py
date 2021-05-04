@@ -105,7 +105,7 @@ class CoerceVAE(Model):
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = lr)
 
-    def call(self, inputs, condition):
+    def call(self, inputs):
 
         zMean, zLogVar, z, coerce = self.encoder(inputs)
         reconstructed             = self.decoder(z)
@@ -123,12 +123,12 @@ class CoerceVAE(Model):
             reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x, xHat )
             reconLoss = tf.reduce_sum( reconLoss, 1 )
             reconLoss = tf.reduce_mean( reconLoss )
-            reconLoss = reconLoss / self.nInp
+            reconLoss = reconLoss 
 
             # KL - divergence loss
             klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
             klLoss    = tf.reduce_mean( klLoss )
-            klLoss    = klLoss / self.nLatent
+            klLoss    = klLoss 
 
             # Coerce Loss
             coerceLoss = tf.reduce_mean( (coerce - y)**2 )
