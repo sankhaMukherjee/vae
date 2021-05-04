@@ -6,13 +6,13 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras import Model, layers
 
 
-class coerceVAE_Encoder(layers.Layer):
+class CoerceVAE_Encoder(layers.Layer):
 
     def __init__(self, nLatent, layers, activations, name='encoder'):
 
         assert len(layers) == len(activations), "In the encoder, the number of layers and activations must be the same"
         
-        super(coerceVAE_Encoder, self).__init__(name=name)
+        super(CoerceVAE_Encoder, self).__init__(name=name)
 
         self.layers  = [ Dense(l, activation=a) for l, a in zip(layers, activations) ]
         self.mean    = Dense(nLatent)
@@ -38,13 +38,13 @@ class coerceVAE_Encoder(layers.Layer):
 
         return zMean, zLogVar, z, coerce
 
-class coerceVAE_Decoder(layers.Layer):
+class CoerceVAE_Decoder(layers.Layer):
 
     def __init__(self, nInp, layers, activations, name='encoder'):
 
         assert len(layers) == len(activations), "In the decoder, the number of layers and activations must be the same"
         
-        super(coerceVAE_Decoder, self).__init__(name=name)
+        super(CoerceVAE_Decoder, self).__init__(name=name)
 
         layers      = list(reversed(layers))
         activations = list(reversed(activations))
@@ -63,7 +63,7 @@ class coerceVAE_Decoder(layers.Layer):
 
         return result
 
-class coerceVAE(Model):
+class CoerceVAE(Model):
 
     def __init__(self, nInp, layers, activations, nLatent, lr = 1e-3, name='coerceVAE'):
         '''[summary]
@@ -94,13 +94,14 @@ class coerceVAE(Model):
         assert len(layers) == len(activations), "The number of layers and activations must be the same"
         
 
-        super(coerceVAE, self).__init__(name=name)
+        super(CoerceVAE, self).__init__(name=name)
         
         nLayers = len(layers)
 
         self.nInp    = nInp
-        self.encoder = CVAE_Encoder(nLatent=nLatent, layers=layers, activations=activations)
-        self.decoder = CVAE_Decoder(nInp, layers=layers, activations=activations)
+        self.nLatent = nLatent
+        self.encoder = CoerceVAE_Encoder(nLatent=nLatent, layers=layers, activations=activations)
+        self.decoder = CoerceVAE_Decoder(nInp, layers=layers, activations=activations)
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = lr)
 
@@ -122,10 +123,12 @@ class coerceVAE(Model):
             reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x, xHat )
             reconLoss = tf.reduce_sum( reconLoss, 1 )
             reconLoss = tf.reduce_mean( reconLoss )
+            reconLoss = reconLoss / self.nInp
 
             # KL - divergence loss
             klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
             klLoss    = tf.reduce_mean( klLoss )
+            klLoss    = klLoss / self.nLatent
 
             # Coerce Loss
             coerceLoss = tf.reduce_mean( (coerce - y)**2 )
@@ -137,5 +140,5 @@ class coerceVAE(Model):
             grads     = tape.gradient(loss, self.trainable_weights)
             self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
 
-        return reconLoss.numpy(), klLoss.numpy(), loss.numpy(), coerceLoss.numpy()
+        return reconLoss.numpy(), klLoss.numpy(), coerceLoss.numpy(), loss.numpy() 
 

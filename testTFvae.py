@@ -14,12 +14,12 @@ from utils import dataUtils as dU
 
 def main():
 
-    now = dt.now().strftime('%Y-%m-%d--%H-%M-%S')
+    now = dt.now().strftime('%Y-%m-%d--%H-%M-%S-vae')
     os.makedirs(f'results/{now}')
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 2000
+    EPOCHS    = 200
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()

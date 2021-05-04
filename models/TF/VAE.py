@@ -62,6 +62,7 @@ class VAE(Model):
         super(VAE, self).__init__(name=name)
         
         self.nInp    = nInp
+        self.nLatent = nLatent
         self.encoder = Encoder(nLatent=nLatent, layers=layers, activations=activations)
         self.decoder = Decoder(nInp, layers=layers, activations=activations)
 
@@ -85,10 +86,12 @@ class VAE(Model):
             reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x, xHat )
             reconLoss = tf.reduce_sum( reconLoss, 1 )
             reconLoss = tf.reduce_mean( reconLoss )
+            reconLoss = reconLoss
 
             # KL - divergence loss
             klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
             klLoss    = tf.reduce_mean( klLoss )
+            klLoss    = klLoss
 
             # Calculate the total loss
             loss      = reconLoss + klLoss
