@@ -68,6 +68,11 @@ class coerceVAE(Model):
     def __init__(self, nInp, layers, activations, nLatent, lr = 1e-3, name='coerceVAE'):
         '''[summary]
 
+        In this VAE, there is an additional output at the end of the encoder that forces
+        a certain distribution of that output to cluster in a particular mannter. This
+        predisposes the output to segregate further into a form that might be beneficial
+        to some downstream tasks.
+
         Parameters
         ----------
         nInp : [type]
@@ -126,7 +131,7 @@ class coerceVAE(Model):
             coerceLoss = tf.reduce_mean( (coerce - y)**2 )
 
             # Calculate the total loss
-            loss      = reconLoss + klLoss
+            loss      = reconLoss + klLoss + coerceLoss
 
             # Optimize
             grads     = tape.gradient(loss, self.trainable_weights)
