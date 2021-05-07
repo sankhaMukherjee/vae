@@ -18,7 +18,7 @@ class ConvEncoder(layers.Layer):
         self.nInpCh  = nInpCh
 
         convSpecs    = zip(nFilters, kernelSizes, strideSizes, activations, paddings)
-        self.convs   = [ Conv2D( filters=f, kernel_size=k, strides=(s, s), padding=p, activation=a) for in f, k, s, a, p in convSpecs ]
+        self.convs   = [ Conv2D( filters=f, kernel_size=k, strides=(s, s), padding=p, activation=a) for f, k, s, a, p in convSpecs ]
         self.flat    = Flatten()
 
         self.mean    = Dense(nLatent)
@@ -41,6 +41,36 @@ class ConvEncoder(layers.Layer):
 
         return zMean, zLogVar, z
 
+    def describe(self, inputs):
+
+        print(f'+--------------- [Encoder Details Start] -----------------')
+
+        print(f'| Shape of the input: {inputs.numpy().shape}')
+
+        # Go through the Convolution layers
+        x = inputs * 1
+        for i, conv in enumerate(self.convs):
+            x = conv(x)
+            print(f'| Shape after the {i:4d}tn convolution: {x.numpy().shape}')
+        
+        x = self.flat(x)
+        print(f'| Shape after flattening: {x.numpy().shape}')
+
+        # Create the latent layer (z)
+        zMean   = self.mean(x)
+        zLogVar = self.logVar(x)
+        epsilon = tf.random.normal( shape=zMean.shape, mean=0, stddev=1 )
+        z       = zMean + tf.exp( 0.5 * zLogVar )*epsilon
+
+        print(f'| Shape of the latent space: {x.numpy().shape}')
+
+        print(f'+--------------- [Encoder Details End] -----------------')
+        
+
+
+        return
+
+
 class ConvDecoder(layers.Layer):
 
     def __init__(self, nInpX, nInpY, nInpCh, nLatent, nFilters, kernelSizes, strideSizes, activations, paddings, name='decoder'):
@@ -51,14 +81,16 @@ class ConvDecoder(layers.Layer):
         self.reshape = Reshape((nLatent, nLatent, nInpCh), input_shape=( nLatent*nLatent*nInpCh, ))
 
         deconvSpecs  = zip(nFilters, kernelSizes, strideSizes, activations, paddings)
-        self.deconvs = [ Conv2DTranspose( filters=f, kernel_size=k, strides=(s, s), padding=p, activation=a) for in f, k, s, a, p in deconvSpecs ]
+        self.deconvs = [ Conv2DTranspose( filters=f, kernel_size=k, strides=(s, s), padding=p, activation=a) for f, k, s, a, p in deconvSpecs ]
 
         self.resize  = layers.experimental.preprocessing.Resizing( nInpY, nInpX )
         self.flat    = Flatten()
         self.result  = Dense( nInpX*nInpY*nInpCh, activation=None )
         
-        
+
     def call(self, inputs):
+
+        x = inputs * 1
 
         # First convert it into a square image
         x = self.resize( x )
@@ -75,6 +107,31 @@ class ConvDecoder(layers.Layer):
         result = self.result( x )
 
         return result
+
+    def describe(self, inputs):
+        '''describe the shapes of the different layers once created
+
+        This will be useful in creating the best estimation of the type of encoders
+        and decoders that can be created for a convolutional encoder and decoder.
+        '''
+
+        
+        # First convert it into a square image
+        x = self.resize( x )
+        x = self.reshape( x )
+
+        # Go through the deconvolution layers
+        for deconv in self.deconvs:
+            x = deconv(x)
+        
+        # flatten it and convert it into something that can be used
+        x = self.resize(x)
+        x = self.flat(x)
+        
+        result = self.result( x )
+
+
+        return
 
 class ConvVAE(Model):
 
