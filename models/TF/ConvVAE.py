@@ -128,8 +128,7 @@ class ConvDecoder(layers.Layer):
         
         result = self.result( x )
 
-
-        return
+        return result
 
 class ConvVAE(Model):
 
@@ -147,6 +146,8 @@ class ConvVAE(Model):
 
         self.encoder = ConvEncoder(nInpX, nInpY, nInpCh, nLatent, **encoderSpecs)
         self.decoder = ConvDecoder(nInpX, nInpY, nInpCh, nLatent, **decoderSpecs)
+
+        self.flatten = Flatten()
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = lr)
 
@@ -177,11 +178,12 @@ class ConvVAE(Model):
 
         with tf.GradientTape() as tape:
 
+            x1 = self.flatten(x)
             zMean, zLogVar, z = self.encoder(x)
             xHat = self.decoder( z )
 
             # Reconstruction Loss
-            reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x, xHat )
+            reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x1, xHat )
             reconLoss = tf.reduce_sum( reconLoss, 1 )
             reconLoss = tf.reduce_mean( reconLoss )
             reconLoss = reconLoss

@@ -5,7 +5,7 @@ import tensorflow as tf
 physical_devices = tf.config.list_physical_devices('GPU')
 tf.config.experimental.set_memory_growth(physical_devices[0], enable=True)
 
-from models.TF import VAE 
+from models.TF import ConvVAE 
 from datetime import datetime as dt
 import numpy as np
 
@@ -17,21 +17,40 @@ def main():
     now = dt.now().strftime('%Y-%m-%d--%H-%M-%S-ConvVAE')
     os.makedirs(f'results/{now}')
 
-    nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
     EPOCHS    = 200
 
     # --------- [ Generate the data ] ---------------------
-    (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
-    train_dataset = tf.data.Dataset.from_tensor_slices(x_train)
+    (x_train, y_train), (x_test, y_test) = dU.getMNISTData(reshape=False)
+    x_train1 = x_train.reshape( -1, 28, 28, 1 )
+    x_test1  = x_test.reshape( -1, 28, 28, 1 )
+    train_dataset = tf.data.Dataset.from_tensor_slices(x_train1)
     train_dataset = train_dataset.shuffle(buffer_size=2048).batch(batchSize)
     
     # --------- [ Generate the model ] ---------------------
-    layers      = [700, 500, 100]
-    activations = ['tanh', 'tanh', 'tanh']
-    nLatent     = 2
+    nInpX  = 28
+    nInpY  = 28
+    nInpCh = 1
+    
+    nLatent = 2
+    
+    encoderSpecs = {
+        'nFilters'    : [2, 5, 10], 
+        'kernelSizes' : [3, 3, 3], 
+        'strideSizes' : [1, 1, 1], 
+        'activations' : [tf.nn.tanh, tf.nn.tanh, tf.nn.tanh], 
+        'paddings'    : ['same', 'same', 'same'],
+    }
 
-    vae = VAE.VAE(nInp, layers=layers, activations = activations, nLatent = nLatent)
+    decoderSpecs = {
+        'nFilters'    : [10, 5, 5, 5, 1], 
+        'kernelSizes' : [5, 7, 7, 6, 6], 
+        'strideSizes' : [1, 1, 1, 1, 1], 
+        'activations' : [tf.nn.tanh, tf.nn.tanh, tf.nn.tanh, tf.nn.tanh, tf.nn.tanh], 
+        'paddings'    : ['valid', 'valid', 'valid', 'valid', 'valid'],
+    }
+
+    vae = ConvVAE.ConvVAE(nInpX, nInpY, nInpCh, nLatent, encoderSpecs, decoderSpecs)
 
     # --------- [ Train the model ] ---------------------
     losses = []
@@ -54,8 +73,8 @@ def main():
         'Total'          : losses[2]}
 
     pU.plotLosses(losses, folder=now)
-    pU.plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=now)
-    pU.plotMNISTImages(epoch, vae, x_test, y_test, logits=True, folder=now)
+    pU.plotMNISTLatentSpace(epoch, vae, x_test1, y_test, folder=now)
+    pU.plotMNISTImages(epoch, vae, x_test1, y_test, logits=True, folder=now)
     pU.plotMNISTLatentReconstruction(epoch, vae, extent=(-3, 3), nSteps=21, logits=True, folder=now)
 
     return
