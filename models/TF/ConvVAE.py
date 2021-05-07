@@ -64,10 +64,7 @@ class ConvEncoder(layers.Layer):
         print(f'|          Shape of the latent space: {z.numpy().shape}')
         print(f'+--------------- [Encoder Details End] -----------------')
         
-
-
-        return
-
+        return zMean, zLogVar, z
 
 class ConvDecoder(layers.Layer):
 
@@ -118,7 +115,7 @@ class ConvDecoder(layers.Layer):
         
         
         # First convert it into a square image
-        x = self.resize( inputs )
+        x = self.resize1( inputs )
         x = self.reshape( x )
 
         # Go through the deconvolution layers
@@ -146,7 +143,7 @@ class ConvVAE(Model):
         self.nLatent = nLatent
 
         self.encoderSpecs = encoderSpecs
-        slef.decoderSpecs = decoderSpecs
+        self.decoderSpecs = decoderSpecs
 
         self.encoder = ConvEncoder(nInpX, nInpY, nInpCh, nLatent, **encoderSpecs)
         self.decoder = ConvDecoder(nInpX, nInpY, nInpCh, nLatent, **decoderSpecs)
@@ -158,6 +155,22 @@ class ConvVAE(Model):
         zMean, zLogVar, z = self.encoder(inputs)
         reconstructed     = self.decoder(z)
         
+        return reconstructed
+
+    def describe(self, inputs):
+
+        print('+-----------------------------------------------')
+        print('|    Description of the convolutional VAE ')
+        print('+-----------------------------------------------')
+        print('|')
+
+        zMean, zLogVar, z = self.encoder.describe(inputs)
+        print('|')
+
+        reconstructed     = self.decoder.describe(z)
+        print('|')
+        print('+-----------------------------------------------')
+
         return reconstructed
 
     def step(self, x):

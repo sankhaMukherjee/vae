@@ -49,6 +49,11 @@ def main():
     cd = ConvVAE.ConvDecoder(nInpX, nInpY, nInpCh, nLatent, **decoderSpecs)
     result = cd.describe(inputs)
 
+    inputs = np.random.rand(1, 28, 28, 1).astype(np.float32)
+    inputs = tf.convert_to_tensor( inputs )
+    c = ConvVAE.ConvVAE(nInpX, nInpY, nInpCh, nLatent, encoderSpecs, decoderSpecs)
+    c.describe(inputs)
+
 
     return
 
