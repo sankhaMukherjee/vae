@@ -30,14 +30,25 @@ def main():
     }
 
     decoderSpecs = {
-        'nFilters'    : [2, 5, 10], 
-        'kernelSizes' : [3, 3, 3], 
-        'strideSizes' : [1, 1, 1], 
-        'activations' : [tf.nn.tanh, tf.nn.tanh, tf.nn.tanh], 
-        'paddings'    : ['same', 'same', 'same'],
+        'nFilters'    : [10, 5, 5, 5, 1], 
+        'kernelSizes' : [5, 7, 7, 6, 6], 
+        'strideSizes' : [1, 1, 1, 1, 1], 
+        'activations' : [tf.nn.tanh, tf.nn.tanh, tf.nn.tanh, tf.nn.tanh, tf.nn.tanh], 
+        'paddings'    : ['valid', 'valid', 'valid', 'valid', 'valid'],
     }
 
-    cv = ConvVAE.ConvEncoder(nInpX, nInpY, nInpCh, nLatent, **encoderSpecs)
+    inputs = np.random.rand(1, 28, 28, 1).astype(np.float32)
+    inputs = tf.convert_to_tensor( inputs )
+
+    ce = ConvVAE.ConvEncoder(nInpX, nInpY, nInpCh, nLatent, **encoderSpecs)
+    result = ce.describe(inputs)
+
+    inputs = np.random.rand(1, 2).astype(np.float32)
+    inputs = tf.convert_to_tensor( inputs )
+
+    cd = ConvVAE.ConvDecoder(nInpX, nInpY, nInpCh, nLatent, **decoderSpecs)
+    result = cd.describe(inputs)
+
 
     return
 

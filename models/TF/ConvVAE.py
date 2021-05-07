@@ -44,17 +44,16 @@ class ConvEncoder(layers.Layer):
     def describe(self, inputs):
 
         print(f'+--------------- [Encoder Details Start] -----------------')
-
-        print(f'| Shape of the input: {inputs.numpy().shape}')
+        print(f'|                 Shape of the input: {inputs.numpy().shape}')
 
         # Go through the Convolution layers
         x = inputs * 1
         for i, conv in enumerate(self.convs):
             x = conv(x)
-            print(f'| Shape after the {i:4d}tn convolution: {x.numpy().shape}')
+            print(f'| Shape after the {i:04d}tn convolution: {x.numpy().shape}')
         
         x = self.flat(x)
-        print(f'| Shape after flattening: {x.numpy().shape}')
+        print(f'|             Shape after flattening: {x.numpy().shape}')
 
         # Create the latent layer (z)
         zMean   = self.mean(x)
@@ -62,8 +61,7 @@ class ConvEncoder(layers.Layer):
         epsilon = tf.random.normal( shape=zMean.shape, mean=0, stddev=1 )
         z       = zMean + tf.exp( 0.5 * zLogVar )*epsilon
 
-        print(f'| Shape of the latent space: {x.numpy().shape}')
-
+        print(f'|          Shape of the latent space: {z.numpy().shape}')
         print(f'+--------------- [Encoder Details End] -----------------')
         
 
@@ -77,7 +75,7 @@ class ConvDecoder(layers.Layer):
 
         super(ConvDecoder, self).__init__(name=name)
 
-        self.resize  = Dense(nLatent*nLatent*nInpCh)
+        self.resize1  = Dense(nLatent*nLatent*nInpCh)
         self.reshape = Reshape((nLatent, nLatent, nInpCh), input_shape=( nLatent*nLatent*nInpCh, ))
 
         deconvSpecs  = zip(nFilters, kernelSizes, strideSizes, activations, paddings)
@@ -88,36 +86,39 @@ class ConvDecoder(layers.Layer):
         self.result  = Dense( nInpX*nInpY*nInpCh, activation=None )
         
 
-    def call(self, inputs):
+    def describe(self, inputs):
 
-        x = inputs * 1
+        print(f'+--------------- [Decoder Details Start] -----------------')
+        print(f'|                 Shape of the input: {inputs.numpy().shape}')
 
         # First convert it into a square image
-        x = self.resize( x )
+        x = self.resize1( inputs )
+        print(f'|                 Shape after resizing: {x.numpy().shape}')
         x = self.reshape( x )
+        print(f'|                Shape after reshaping: {x.numpy().shape}')
 
         # Go through the deconvolution layers
-        for deconv in self.deconvs:
+        for i, deconv in enumerate(self.deconvs):
             x = deconv(x)
+            print(f'| Shape after the {i:04d}tn deconvolution: {x.numpy().shape}')
         
         # flatten it and convert it into something that can be used
         x = self.resize(x)
+        print(f'|           Shape after image resizing: {x.numpy().shape}')
         x = self.flat(x)
+        print(f'|               Shape after flattening: {x.numpy().shape}')
         
         result = self.result( x )
+        print(f'|            Shape of the final result: {result.numpy().shape}')
+        print(f'+--------------- [Decoder Details End] -----------------')
 
         return result
 
-    def describe(self, inputs):
-        '''describe the shapes of the different layers once created
-
-        This will be useful in creating the best estimation of the type of encoders
-        and decoders that can be created for a convolutional encoder and decoder.
-        '''
-
+    def call(self, inputs):
+        
         
         # First convert it into a square image
-        x = self.resize( x )
+        x = self.resize( inputs )
         x = self.reshape( x )
 
         # Go through the deconvolution layers
