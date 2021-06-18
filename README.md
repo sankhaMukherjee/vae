@@ -52,6 +52,11 @@ when the label data is available.
 | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/Coerce/00149_LatentSpace.png) | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/Coerce/00149_LatentReconstruction.png) |
 
 
+## C-VAE
+
+| 1 | 2 | 3 |  5 |
+|---|---|---|----|
+| ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_01.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_02.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_03.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_05.png) | 
 
 # Requirements
 
