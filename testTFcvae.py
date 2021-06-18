@@ -19,7 +19,7 @@ def main():
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 500
+    EPOCHS    = 200
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
@@ -30,7 +30,7 @@ def main():
     
     # --------- [ Generate the model ] ---------------------
     layers      = [700, 500, 100]
-    activations = ['tanh', 'tanh', 'tanh']
+    activations = ['relu', 'relu', 'relu']
     nLatent     = 2
 
     cvae = CVAE.CVAE(nInp, layers=layers, activations = activations, nLatent = nLatent, concatLayer=0)

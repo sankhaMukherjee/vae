@@ -152,7 +152,7 @@ class CVAE(Model):
             klLoss    = tf.reduce_mean( klLoss )
 
             # Calculate the total loss
-            loss      = reconLoss + klLoss
+            loss      = reconLoss + 1e1*klLoss
 
             # Optimize
             grads     = tape.gradient(loss, self.trainable_weights)
