@@ -19,7 +19,7 @@ def main():
 
     nInp      = 784  # (28*28) shaped images 
     batchSize = 1024
-    EPOCHS    = 200
+    EPOCHS    = 100
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData()
@@ -28,6 +28,7 @@ def main():
     
     # --------- [ Generate the model ] ---------------------
     layers      = [700, 500, 100]
+    activations = ['relu', 'relu', 'relu']
     activations = ['tanh', 'tanh', 'tanh']
     nLatent     = 2
 
@@ -52,6 +53,10 @@ def main():
         'reconstruction' : losses[0],
         'KL Divergence'  : losses[1],
         'Total'          : losses[2]}
+
+
+    # vae.predict(x_train[:10])
+    vae.checkpoint( f'results/{now}')
 
     pU.plotLosses(losses, folder=now)
     pU.plotMNISTLatentSpace(epoch, vae, x_test, y_test, folder=now)

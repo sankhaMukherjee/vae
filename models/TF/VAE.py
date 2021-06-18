@@ -2,7 +2,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 import tensorflow as tf
 
-from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras import Model, layers
 
 
@@ -102,3 +102,9 @@ class VAE(Model):
 
         return reconLoss.numpy(), klLoss.numpy(), loss.numpy()
 
+    def checkpoint(self, folder):
+
+        folder = os.path.join( folder, 'model', 'modelData' )
+        os.makedirs( folder, exist_ok=True )
+        self.save_weights( folder )
+        return
