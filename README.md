@@ -36,7 +36,14 @@ The following examples are present
 ## VAE latent reconstruction with `relu` activation: 
 
 ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/vae-relu/00099_LatentReconstruction.png)
+
+## ConvVAE latent reconstruction with `tanh` activation: 
+
+![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/ConvVAE/00099_LatentReconstruction.png)
+
 # Requirements
+
+
 
 The current version is written with the following configuration:
 
