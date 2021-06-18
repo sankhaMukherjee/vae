@@ -19,8 +19,8 @@ def main():
     os.makedirs(f'results/{now}')
 
     nInp      = 3    # mse values
-    batchSize = 1024
-    EPOCHS    = 100
+    batchSize = 512
+    EPOCHS    = 200
 
     # --------- [ Generate the data ] ---------------------
     mVals = np.load('data/mVals.npy')

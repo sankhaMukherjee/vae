@@ -18,7 +18,7 @@ def main():
     os.makedirs(f'results/{now}')
 
     batchSize = 1024
-    EPOCHS    = 200
+    EPOCHS    = 100
 
     # --------- [ Generate the data ] ---------------------
     (x_train, y_train), (x_test, y_test) = dU.getMNISTData(reshape=False)
