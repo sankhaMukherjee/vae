@@ -29,10 +29,13 @@ The following examples are present
 
 # Example Results
 
-VAE latent reconstruction with `tanh` activation: 
- 
+## VAE latent reconstruction with `tanh` activation: 
+
 ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/vae-tanh/00099_LatentReconstruction.png)
 
+## VAE latent reconstruction with `relu` activation: 
+
+![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/vae-relu/00099_LatentReconstruction.png)
 # Requirements
 
 The current version is written with the following configuration:
