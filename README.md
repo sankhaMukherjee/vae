@@ -41,6 +41,18 @@ The following examples are present
 
 ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/ConvVAE/00099_LatentReconstruction.png)
 
+
+## Coerce VAE
+
+In this case, we ant to _coerce_ the latent space such that it is easier to discriminate between the different labels
+when the label data is available. 
+
+| latent space | reconstruction |
+|--------------|----------------|
+| ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/Coerce/00149_LatentSpace.png) | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/Coerce/00149_LatentReconstruction.png) |
+
+
+
 # Requirements
 
 
