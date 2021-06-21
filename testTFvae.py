@@ -29,7 +29,7 @@ def main():
     # --------- [ Generate the model ] ---------------------
     layers      = [700, 500, 100]
     activations = ['relu', 'relu', 'relu']
-    activations = ['tanh', 'tanh', 'tanh']
+    # activations = ['tanh', 'tanh', 'tanh']
     nLatent     = 2
 
     vae = VAE.VAE(nInp, layers=layers, activations = activations, nLatent = nLatent)

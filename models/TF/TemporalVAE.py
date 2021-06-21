@@ -25,11 +25,12 @@ class Encoder(layers.Layer):
         
         # Create the latent layer (z)
         zMean   = self.mean(x)
-        zLogVar = self.logVar(x)
-        epsilon = tf.random.normal( shape=zMean.shape, mean=0, stddev=1 )
-        z       = zMean + tf.exp( 0.5 * zLogVar )*epsilon
+        # zLogVar = self.logVar(x)
+        # epsilon = tf.random.normal( shape=zMean.shape, mean=0, stddev=1 )
+        # z       = zMean + tf.exp( 0.5 * zLogVar )*epsilon
 
-        return zMean, zLogVar, z
+        # return zMean, zLogVar, z
+        return zMean
 
 class Decoder(layers.Layer):
 
@@ -94,7 +95,8 @@ class TemporalVAE(Model):
 
     def call(self, inputs):
 
-        zMean, zLogVar, z = self.encoder(inputs)
+        # zMean, zLogVar, z = self.encoder(inputs)
+        zMean             = self.encoder(inputs)
         reconstructed1    = self.decoder(zMean)
         z_p1              = self.transition(zMean)
         reconstructed2    = self.decoder(z_p1)
@@ -107,9 +109,9 @@ class TemporalVAE(Model):
 
         with tf.GradientTape() as tape:
 
-            zMean, zLogVar, z = self.encoder(x1)
-            reconstructed1    = self.decoder(z)
-            z_p1              = self.transition(z)
+            zMean             = self.encoder(x1)
+            reconstructed1    = self.decoder(zMean)
+            z_p1              = self.transition(zMean)
             reconstructed2    = self.decoder(z_p1)
 
             # Reconstruction Loss 1
@@ -123,9 +125,9 @@ class TemporalVAE(Model):
             reconLoss2 = tf.reduce_mean( reconLoss2 )
 
             # KL - divergence loss
-            klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
-            klLoss    = tf.reduce_mean( klLoss )
-            klLoss    = klLoss
+            # klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
+            # klLoss    = tf.reduce_mean( klLoss )
+            # klLoss    = klLoss
 
             # Calculate the total loss
             loss      = reconLoss1 + reconLoss2  #+ klLoss
@@ -134,7 +136,7 @@ class TemporalVAE(Model):
             grads     = tape.gradient(loss, self.trainable_weights)
             self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
 
-        return reconLoss1.numpy(), reconLoss2.numpy(), klLoss.numpy(), loss.numpy()
+        return reconLoss1.numpy(), reconLoss2.numpy(), loss.numpy()
 
     def checkpoint(self, folder):
 

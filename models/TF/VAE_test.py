@@ -4,6 +4,7 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras import Model, layers
+import tensorflow as tf
 
 
 class Encoder(layers.Layer):
@@ -33,7 +34,7 @@ class Encoder(layers.Layer):
 
 class Decoder(layers.Layer):
 
-    def __init__(self, nInp, layers, activations, name='encoder'):
+    def __init__(self, nInp, layers, activations, name='decoder'):
 
         super(Decoder, self).__init__(name=name)
 
@@ -99,6 +100,48 @@ class VAE(Model):
             # Optimize
             grads     = tape.gradient(loss, self.trainable_weights)
             self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
+
+        return reconLoss.numpy(), klLoss.numpy(), loss.numpy()
+
+    def checkWeights(self, x):
+
+        with tf.GradientTape() as tape:
+
+            zMean, zLogVar, z = self.encoder(x)
+            xHat = self.decoder( z )
+
+            # Reconstruction Loss
+            reconLoss = tf.nn.sigmoid_cross_entropy_with_logits( x, xHat )
+            reconLoss = tf.reduce_sum( reconLoss, 1 )
+            reconLoss = tf.reduce_mean( reconLoss )
+            reconLoss = reconLoss
+
+            # KL - divergence loss
+            klLoss    = - 0.5 * tf.reduce_sum(zLogVar - tf.square(zMean) - tf.exp(zLogVar) + 1, 1)
+            klLoss    = tf.reduce_mean( klLoss )
+            klLoss    = klLoss
+
+            # Calculate the total loss
+            loss      = reconLoss + 1e1*klLoss
+
+            # CheckWeights
+            for w in self.trainable_weights:
+                print(w.name)
+
+            encWeights = []
+            encWeights = [w for w in self.trainable_weights if 'encoder' in w.name]
+
+            # Optimize
+            grads = tape.gradient(loss, encWeights)
+            # grads = [ tf.clip_by_norm() for g in grads]
+
+            clippedGrads = []
+            for w, g in zip( encWeights, grads):
+                print(f'{w.numpy().max():8.4f}, {g.numpy().max():8.4f} {g.numpy().min():8.4f}')
+                # g = tf.clip_by_value()
+
+
+            # self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
 
         return reconLoss.numpy(), klLoss.numpy(), loss.numpy()
 

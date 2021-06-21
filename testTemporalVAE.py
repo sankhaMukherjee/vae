@@ -21,6 +21,7 @@ def main():
     nInp      = 3    # mse values
     batchSize = 512
     EPOCHS    = 200
+    lr        = 5e-4
 
     # --------- [ Generate the data ] ---------------------
     mVals = np.load('data/mVals.npy')
@@ -42,6 +43,7 @@ def main():
         nInp, # This isthe shape of the MSE
         layersEnc=layers, activationsEnc = activations, nLatent = nLatent, # Hidden layers for the encoder/decoders
         layersTrans=layersTrans, activationsTrans=activationsTrans,  # Hidden layers for the transition
+        lr = lr
     )
 
     # --------- [ Train the model ] ---------------------
@@ -51,20 +53,20 @@ def main():
 
         # Iterate over the batches of the dataset.
         for step, x in enumerate(train_dataset):
-            reconLoss1, reconLoss2, klLoss, loss = temporalVae.step( x )
-            losses.append([reconLoss1, reconLoss2, klLoss, loss])
+            reconLoss1, reconLoss2, loss = temporalVae.step( x )
+            losses.append([reconLoss1, reconLoss2, loss])
 
             if step % 100 == 0:
                 # print(f'{reconLoss1:03e}, {reconLoss2:03e}, {klLoss:03e}, {loss:03e}')
-                print(f'{reconLoss1:03e}, {reconLoss2:03e}, {klLoss:03e}, {loss:03e}')
+                print(f'{reconLoss1:03e}, {reconLoss2:03e}, {loss:03e}')
 
     # ------------- [plot everything] -----------------
     losses = np.array(losses).T
     losses = {
         'recon1' : losses[0],
         'recon2' : losses[1],
-        'klLoss' : losses[2],
-        'total'  : losses[3]}
+        # 'klLoss' : losses[2],
+        'total'  : losses[2]}
 
 
     # # vae.predict(x_train[:10])
