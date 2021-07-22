@@ -67,7 +67,7 @@ class SigmaVAE(Model):
         self.decoder = Decoder(nInp, layers=layers, activations=activations)
 
         # This is going to be a learned parameter
-        self.sigma   = tf.Variable(1, trainable=True)
+        self.sigma   = tf.Variable(1., dtype=None, trainable=True)
 
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = lr)
 
@@ -101,7 +101,7 @@ class SigmaVAE(Model):
 
             # Calculate the total loss
             # The log sigma might cause things to become 
-            loss      =  D * tf.log( self.sigma ) +  reconLoss / (2 * self.sigma**2)  + klLoss
+            loss      =  D * tf.math.log( self.sigma ) +  reconLoss / (2 * self.sigma**2)  + klLoss
 
             # Optimize
             grads     = tape.gradient(loss, self.trainable_weights)
