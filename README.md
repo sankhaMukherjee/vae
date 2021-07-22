@@ -58,9 +58,23 @@ when the label data is available.
 |---|---|---|----|
 | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_01.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_02.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_03.png) | ![img](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/CVAE/00199_LatentReconstruction_05.png) | 
 
+
+## σ-VAE
+
+The σ-VAE is a variant on the β-VAE in that the parameter β is no longer a parameter that needs to be tuned
+by hand, but can be learned end-to-end. This follows from the work of Rybkin et al. [1], and is supposed to
+yield much better reconstructions in comparison to β-VAEs. Note that all the VAE's that are shown above have
+some form of manual β-tuning that has been performed at run-time. Compare reconstruction results form the
+β-VAE and the σ-VAE below:
+
+| VAE type| reconstruction |
+|---------|------------|
+|  β-VAE  | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/vae-relu/00099_reconstruction.png) |
+|  σ-VAE  | ![image](https://raw.githubusercontent.com/sankhaMukherjee/vae/master/results/sigmaVae/00099_reconstruction.png) |
+
+
+
 # Requirements
-
-
 
 The current version is written with the following configuration:
 
