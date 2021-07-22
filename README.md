@@ -103,3 +103,7 @@ Sankha S. Mukherjee - Initial work (2021)
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
+
+## References
+
+1. [Simple and Effective VAE Training with Calibrated Decoders](https://arxiv.org/pdf/2006.13202.pdf)
